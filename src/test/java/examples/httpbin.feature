@@ -64,3 +64,18 @@ Scenario: Delete Request
   """
   { }
   """
+
+  Scenario: Send POST request to login endpoint
+    * configure ssl = true
+    Given url 'https://dummyjson.com/auth/login'
+    And request { username: 'emilys', password: 'emilyspass' }
+    When method post
+    Then status 200
+    * def accessToken = response.accessToken
+    * karate.log('Access Token:', accessToken)
+
+    Given url 'https://dummyjson.com/auth/me'
+    And header Authorization = 'Bearer ' + accessToken
+    When method get
+    Then status 200
+    * karate.log('User profile:', response)
