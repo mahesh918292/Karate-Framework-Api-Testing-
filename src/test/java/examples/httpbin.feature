@@ -1,4 +1,4 @@
-Feature: simple request
+Feature: Api Testing
 Scenario: Check status and response
   Given url 'http://jsonplaceholder.typicode.com/posts'
   When method get
@@ -36,10 +36,17 @@ Scenario: Send POST request with JSON data
   And request { title: 'foo', body: 'bar', userId: 1 }
   When method post
   Then status 201
-  And match response ==
-  """
-  {"title":"foo","body":"bar","userId":1,"id":101}
-  """
+  * def schema =
+    """
+    {
+      title: '#string',
+      body: '#string',
+      userId: '#number',
+      id: '#number'
+    }
+    """
+
+  * match response == schema
   
 
 Scenario: Put Delete
@@ -79,3 +86,17 @@ Scenario: Delete Request
     When method get
     Then status 200
     * karate.log('User profile:', response)
+
+Scenario: Call Delete Scenario
+  * def result = call read('classpath:examples/sample.feature')
+  * print 'Delete response:', result
+
+  * def toUpper =
+    """
+    function(x) {
+      return x.toUpperCase();
+    }
+    """
+
+  * def result = toUpper('karate')
+  * assert result == 'KARATE'

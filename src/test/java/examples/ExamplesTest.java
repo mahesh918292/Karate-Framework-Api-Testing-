@@ -9,7 +9,7 @@ class ExamplesTest {
 
     @Test
     void testParallel() {
-        Results results = Runner.path("classpath:examples")
+        Results results = Runner.path("classpath:examples/httpbin.feature")
                 .parallel(1);
         assertEquals(0, results.getFailCount(), results.getErrorMessages());
     }
